@@ -5,7 +5,6 @@ root=None
 tBox=None
 myText=None
 st=""
-#global n
 
 def main():
     global root
@@ -13,7 +12,7 @@ def main():
     root.title("Calculator")
     createTextBox(root)
     frame1=Frame(root)
-    #addButton(frame1,LEFT,1)
+    
     b1a = Button(frame1, text="0"   , height=1, width=1,
                  command=lambda: buttonPushed("0"))
     b1b = Button(frame1, text=".", height=1, width=1,
@@ -26,6 +25,7 @@ def main():
                  command=lambda: buttonPushed("="))
     b1=[b1a,b1b,b1c,b1d,b1e]
     packButtons(b1)
+    
     
     frame2=Frame(root)
     b2a = Button(frame2, text="1", height=1, width=1,
@@ -88,6 +88,8 @@ def createTextBox(parent):
     myText=StringVar()
     myText.set("")
     tBox = Entry(parent,textvariable=myText)
+    tBox.focus()
+    tBox.bind('<Return>',bind_equals_to)
     
 
 def buttonPushed(i):
@@ -95,6 +97,7 @@ def buttonPushed(i):
     global st
     try:
         if i=="=":
+            st=tBox.get()
             myText.set(str(eval(st)))
             st=""    
         elif i=="X":
@@ -102,9 +105,8 @@ def buttonPushed(i):
             st=""
         else:
             st+=str(i)
-            myText.set(st)    
-            
-                      
+            myText.set(st)  
+
     except ZeroDivisionError:
         myText.set("Division by Zero!")
     except SyntaxError:
@@ -119,7 +121,8 @@ def packButtons(b):
     for button in b:
         button.pack(side=LEFT)
 
-
-
+def bind_equals_to(event):
+    buttonPushed("=")
+    
 if __name__ == '__main__':
     main()
